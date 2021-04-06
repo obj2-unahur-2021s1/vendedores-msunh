@@ -26,19 +26,25 @@ abstract class Vendedor {
 
   fun esFirme() = this.puntajeCertificaciones() >= 30
 
-  fun certificacionesDeProducto() = certificaciones.count { it.esDeProducto }
+  fun certificacionesDeProducto() =
+    certificaciones.count { it.esDeProducto }
 
-  fun otrasCertificaciones() = certificaciones.count { !it.esDeProducto }
+  fun otrasCertificaciones() =
+    certificaciones.count { !it.esDeProducto }
 
-  fun esGenerico() = this.otrasCertificaciones() >=1
+  fun esGenerico() =
+    this.otrasCertificaciones() >=1
 
-  fun puntajeCertificaciones() = certificaciones.sumBy { c -> c.puntaje }
+  fun puntajeCertificaciones() =
+    certificaciones.sumBy { c -> c.puntaje }
 
   abstract fun esInfluyente() : Boolean
+
 }
 
 // En los parámetros, es obligatorio poner el tipo
 class VendedorFijo(val ciudadOrigen: Ciudad) : Vendedor() {
+
   override fun puedeTrabajarEn(ciudad: Ciudad): Boolean {
     return ciudad == ciudadOrigen
   }
@@ -47,28 +53,28 @@ class VendedorFijo(val ciudadOrigen: Ciudad) : Vendedor() {
 
 }
 
+
 // A este tipo de List no se le pueden agregar elementos una vez definida
 class Viajante(val provinciasHabilitadas: List<Provincia>) : Vendedor() {
+
   override fun puedeTrabajarEn(ciudad: Ciudad): Boolean {
     return provinciasHabilitadas.contains(ciudad.provincia)
   }
 
-  override fun esInfluyente() = provinciasHabilitadas.sumBy { p -> p.poblacion } >= 10000000
-
-
-
+  override fun esInfluyente() =
+    provinciasHabilitadas.sumBy { p -> p.poblacion } >= 10000000
 }
 
+// A este tipo de List no se le pueden agregar elementos una vez definida
 class ComercioCorresponsal(val ciudades: List<Ciudad>) : Vendedor() {
+
   override fun puedeTrabajarEn(ciudad: Ciudad): Boolean {
-    return ciudades.contains(ciudad)
-  }
+      return ciudades.contains(ciudad)
+    }
 
-  fun cantProvinciasDeSucursal() = ciudades.map { c -> c.provincia }.toSet().size
+    fun cantProvinciasDeSucursal() =
+      ciudades.map { c -> c.provincia }.toSet().size
 
-  override fun esInfluyente() = this.cantProvinciasDeSucursal() >=3 || ciudades.size >= 5
-
-
-
-
+    override fun esInfluyente() =
+      this.cantProvinciasDeSucursal() >= 3 || ciudades.size >= 5
 }
